@@ -23,7 +23,7 @@ a {
     margin-right: 15px;
 }
 
-.black,.brown,.red,.green,.yellow,.blue,.orange,.purple,.gray {
+.black,.brown,.red,.green,.blue,.orange,.purple,.gray {
     color: white;
 }
 
@@ -66,4 +66,12 @@ a {
 
 .green {
     background-color: green;
+}
+
+.gold {
+    background-color: #DAA520;
+}
+
+.silver {
+    background-color: silver;
 }

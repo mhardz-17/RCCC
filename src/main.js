@@ -9,12 +9,16 @@ import './../node_modules/bootstrap/dist/js/bootstrap.min.js'
 import './assets/css/main.css'
 
 import BaseBand from './components/BaseBand.vue'
+import MultiplierBand from './components/MultiplierBand.vue'
+import ToleranceBand from './components/ToleranceBand.vue'
 
 var _ = require('lodash')
 
 Vue.config.productionTip = false
 
 Vue.component('base-band', BaseBand)
+Vue.component('multiplier-band', MultiplierBand)
+Vue.component('tolerance-band', ToleranceBand)
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,27 +1,30 @@
 <template>
     <div class="baseband">
         <select class="form-control baseband-selector" v-bind:class="selectClass" v-model="currentValue" @change="updateParent" >
-            <option  v-for="data,key in color_and_values" v-bind:key="key" :value="key">{{ data.label }}</option>
+            <option  v-for="value,color in color_and_values" v-bind:key="color" :value="color">{{ getLabel(value, color) }}</option>
         </select>
     </div>
 </template>
 
 <script>
+
 const colorAndValue = {
-  black: {value: 0, label: '0 Black'},
-  brown: {value: 1, label: '1 Brown'},
-  red: {value: 2, label: '2 Red'},
-  orange: {value: 3, label: '3 Orange'},
-  yellow: {value: 4, label: '4 Yellow'},
-  green: {value: 5, label: '5 Green'},
-  blue: {value: 6, label: '6 Blue'},
-  purple: {value: 7, label: '7 Purple'},
-  gray: {value: 8, label: '8 Gray'},
-  white: {value: 9, label: '9 White'}
+  black: 'x1',
+  brown: 'x10',
+  red: 'x100',
+  orange: 'x1k',
+  yellow: 'x10k',
+  green: 'x100k',
+  blue: 'x1M',
+  purple: 'x10M',
+  gray: 'x100M',
+  white: 'x1G',
+  gold: 'x.1',
+  silver: 'x.01'
 }
 
 export default {
-  name: 'BaseBand',
+  name: 'MultiplierBand',
   data () {
     return {
       color_and_values: colorAndValue,
@@ -37,18 +40,17 @@ export default {
       _.forEach(colorAndValue, function (value, key) {
         classes[key] = (key == self.currentValue)
       })
-
       return classes
     }
   },
   methods: {
     updateParent: function () {
+      console.log(this.parent_key + ': ' + this.currentValue)
       this.$emit('update', this.parent_key, this.currentValue)
+    },
+    getLabel: function (value, color) {
+      return value + ' ' + _.capitalize(color)
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
