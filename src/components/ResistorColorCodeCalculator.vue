@@ -1,22 +1,80 @@
 <template>
-    <div class="hello">
+    <div class="rcc-calculator container">
         <h1>{{ msg }}</h1>
-        <div class="row justify-content-md-center">
-            <div class="col-4" style="background-color:gray; height: 50px">
-                <div class="band" :class="[r4b1]"></div>
-                <div class="band" :class="[r4b2]"></div>
-                <div class="band" :class="[r4b3]"></div>
-                <div class="band" :class="[r4b4]"></div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" @click="setBandCount(4)">
+                <a class="nav-link active" id="r4-tab-link" data-toggle="tab" href="#r4-tab" role="tab"
+                   aria-controls="home" aria-selected="true">4 Band</a>
+            </li>
+            <li class="nav-item" @click="setBandCount(5)">
+                <a class="nav-link" id="r5-tab-link" data-toggle="tab" href="#r5-tab" role="tab" aria-controls="profile"
+                   aria-selected="false">5 Band</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane show active" id="r4-tab" role="tabpanel" aria-labelledby="home-tab">
+                <h5>4 Band Resistor</h5>
+                <div class="row justify-content-md-center">
+                    <div class="" style="background-color:#17a2b8; height: 50px;width: 150px;padding-left: 15px;">
+                        <div class="band" :class="[r4b1]"></div>
+                        <div class="band" :class="[r4b2]"></div>
+                        <div class="band" :class="[r4b3]"></div>
+                        <div class="band" :class="[r4b4]"></div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col">
+                        <base-band name="r4b1" v-bind:value="r4b1" @update="cc"></base-band>
+                    </div>
+                    <div class="col">
+                        <base-band name="r4b2" v-bind:value="r4b2" @update="cc"></base-band>
+                    </div>
+                    <div class="col">
+                        <multiplier-band name="r4b3" v-bind:value="r4b3" @update="cc"></multiplier-band>
+                    </div>
+                    <div class="col">
+                        <tolerance-band name="r4b4" v-bind:value="r4b4" @update="cc"></tolerance-band>
+                    </div>
+                </div>
+                <hr>
+                Resistance: {{ formatResistance(resistance) }} <br>
+                Min Resistance: {{ formatResistance(min_resistance) }} <br>
+                Max Resistance: {{ formatResistance(max_resistance) }} <br>
+            </div>
+            <div class="tab-pane" id="r5-tab" role="tabpanel" aria-labelledby="r5-tab">
+                <h5>5 Band Resistor</h5>
+                <div class="row justify-content-md-center">
+                    <div class="" style="background-color:#17a2b8; height: 50px;width: 180px;padding-left: 15px;">
+                        <div class="band" :class="[r5b1]"></div>
+                        <div class="band" :class="[r5b2]"></div>
+                        <div class="band" :class="[r5b3]"></div>
+                        <div class="band" :class="[r5b4]"></div>
+                        <div class="band" :class="[r5b5]"></div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col">
+                        <base-band name="r5b1" v-bind:value="r5b1" @update="cc"></base-band>
+                    </div>
+                    <div class="col">
+                        <base-band name="r5b2" v-bind:value="r5b2" @update="cc"></base-band>
+                    </div>
+                    <div class="col">
+                        <base-band name="r5b3" v-bind:value="r5b3" @update="cc"></base-band>
+                    </div>
+                    <div class="col">
+                        <multiplier-band name="r5b4" v-bind:value="r5b4" @update="cc"></multiplier-band>
+                    </div>
+                    <div class="col">
+                        <tolerance-band name="r5b5" v-bind:value="r5b5" @update="cc"></tolerance-band>
+                    </div>
+                </div>
+                <hr>
+                Resistance: {{ formatResistance(resistance) }} <br>
+                Min Resistance: {{ formatResistance(min_resistance) }} <br>
+                Max Resistance: {{ formatResistance(max_resistance) }} <br>
             </div>
         </div>
-        <base-band name="r4b1" v-bind:value="r4b1" @update="cc"></base-band>
-        <base-band name="r4b2" v-bind:value="r4b2" @update="cc"></base-band>
-        <multiplier-band name="r4b3" v-bind:value="r4b3" @update="cc"></multiplier-band>
-        <tolerance-band name="r4b4" v-bind:value="r4b4" @update="cc"></tolerance-band>
-        <hr>
-        Resistance: {{ formatResistance(resistance) }} <br>
-        Min Resistance: {{ formatResistance(min_resistance) }} <br>
-        Max Resistance: {{ formatResistance(max_resistance) }} <br>
     </div>
 </template>
 
@@ -61,6 +119,11 @@ export default {
       r4b2: 'blue',
       r4b3: 'silver',
       r4b4: 'gold',
+      r5b1: 'white',
+      r5b2: 'blue',
+      r5b3: 'black',
+      r5b4: 'silver',
+      r5b5: 'gold',
       bandCount: 4,
       resistance: 0,
       min_resistance: 0,
@@ -79,6 +142,10 @@ export default {
 
   },
   methods: {
+    setBandCount: function (band) {
+      this.bandCount = band
+      this.getResistance()
+    },
     cc: function (key, value) {
       this[key] = value
       this.getResistance()
@@ -103,20 +170,22 @@ export default {
       this.max_resistance = this.resistance + plusminus_resistance
     },
     formatResistance: function (resistance) {
-        console.log(parseFloat(resistance / 1000000000));
-      if (parseInt((resistance / 1000000000)) >= 1) {
-        return (resistance / 1000000000) + 'G';
+      if (resistance < 1000) {
+        return resistance
       }
-        if (parseInt((resistance / 1000000)) >= 1) {
-            return (resistance / 1000000) + 'M';
-        }
 
-        if (parseInt((resistance / 1000)) >= 1) {
-            return (resistance / 1000) + 'K';
-        }
+      if (parseInt((resistance / 1000000000)) >= 1) {
+        return (resistance / 1000000000) + 'G'
+      }
+      if (parseInt((resistance / 1000000)) >= 1) {
+        return (resistance / 1000000) + 'M'
+      }
 
-        return resistance;
+      if (parseInt((resistance / 1000)) >= 1) {
+        return (resistance / 1000) + 'K'
+      }
 
+      return resistance
     },
     getResistance: function () {
       if (this.bandCount == 4) {
